@@ -1,0 +1,31 @@
+{
+    "name": "jobmedia",
+    "version": "1.0.4",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "tsc",
+        "test": "echo \"No tests specified\" && exit 0"
+    },
+    "keywords": [
+        "albums",
+        "media",
+        "library"
+    ],
+    "author": "",
+    "license": "ISC",
+    "type": "commonjs",
+    "description": "",
+    "dependencies": {
+        "expo": "^52.0.28",
+        "expo-av": "^15.0.2",
+        "expo-image-manipulator": "~13.0.6",
+        "expo-media-library": "~17.0.5",
+        "react": "^18.3.1",
+        "react-native": "^0.77.0",
+        "typescript": "^5.7.3"
+    },
+    "devDependencies": {
+        "@types/react": "^18.3.18"
+    }
+}
