@@ -1,0 +1,15 @@
+import * as MediaLibrary from "expo-media-library";
+export declare class MediaAssets {
+    private _hasNextPage;
+    private _after;
+    private _pageSize;
+    private _stack;
+    constructor();
+    setPageSize(pageSize: number): void;
+    getFirstAssetPage(pageSize: number): Promise<MediaLibrary.Asset[]>;
+    getNextAssetPage(): Promise<MediaLibrary.Asset[] | null>;
+    getPreviousAssetPage(): Promise<MediaLibrary.Asset[] | undefined>;
+    private getAssetPage;
+    getAllAssets(): Promise<MediaLibrary.Asset[]>;
+    createThumbnail(uri: string, jobName: string, width: number, height: number): Promise<string | undefined>;
+}
