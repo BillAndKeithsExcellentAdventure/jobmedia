@@ -93,6 +93,44 @@ export class MediaAssets {
         }
         return assets;
     }
+    getDistanceBetweenPoints(point1, point2) {
+        const toRadians = (degrees) => degrees * (Math.PI / 180);
+        const R = 6371e3; // Earth radius in meters
+        const φ1 = toRadians(point1.latitude);
+        const φ2 = toRadians(point2.latitude);
+        const Δφ = toRadians(point2.latitude - point1.latitude);
+        const Δλ = toRadians(point2.longitude - point1.longitude);
+        const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) + Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        const distance = R * c; // in meters
+        return distance;
+    }
+    async getAllAssetsNearLocation(longitude, latitude, distance) {
+        let assets = [];
+        let hasNextPage = true;
+        let after = undefined;
+        let counter = 0;
+        while (hasNextPage) {
+            const result = await MediaLibrary.getAssetsAsync({
+                first: 100, // Adjust the number as needed
+                after: after,
+            });
+            console.log(`Page ${counter++} with ${result.assets.length} assets`);
+            for (let asset of result.assets) {
+                const location = await this.getAssetLocation(asset.id);
+                if (location) {
+                    const distanceInMeters = this.getDistanceBetweenPoints({ longitude: longitude, latitude: latitude }, location);
+                    if (distanceInMeters <= distance) {
+                        console.log(`Asset ${asset.id} is within distance of ${distance} `);
+                        assets.push(asset);
+                    }
+                }
+            }
+            hasNextPage = result.hasNextPage;
+            after = result.endCursor;
+        }
+        return assets;
+    }
     async createThumbnail(uri, jobName, width, height) {
         let thumbnailUrlInBase64 = undefined;
         try {
@@ -120,5 +158,21 @@ export class MediaAssets {
             thumbnailUrlInBase64 = undefined;
         }
         return thumbnailUrlInBase64;
+    }
+    async getAssetLocation(assetId) {
+        try {
+            const asset = await MediaLibrary.getAssetInfoAsync(assetId);
+            if (asset && asset.location) {
+                return {
+                    latitude: asset.location.latitude,
+                    longitude: asset.location.longitude,
+                };
+            }
+            return null;
+        }
+        catch (error) {
+            console.error(`Error fetching asset location: ${error}`);
+            return null;
+        }
     }
 }

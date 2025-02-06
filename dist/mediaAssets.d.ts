@@ -11,5 +11,11 @@ export declare class MediaAssets {
     getPreviousAssetPage(): Promise<MediaLibrary.Asset[] | undefined>;
     private getAssetPage;
     getAllAssets(): Promise<MediaLibrary.Asset[]>;
+    private getDistanceBetweenPoints;
+    getAllAssetsNearLocation(longitude: number, latitude: number, distance: number): Promise<MediaLibrary.Asset[]>;
     createThumbnail(uri: string, jobName: string, width: number, height: number): Promise<string | undefined>;
+    getAssetLocation(assetId: string): Promise<{
+        latitude: number;
+        longitude: number;
+    } | null>;
 }
