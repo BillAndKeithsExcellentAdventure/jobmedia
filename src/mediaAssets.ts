@@ -104,19 +104,6 @@ export class MediaAssets {
         }
     }
 
-    public async getAssetById(assetId: string, albumId: string): Promise<MediaLibrary.Asset | null> {
-        try {
-            const asset = await MediaLibrary.getAssetInfoAsync(assetId);
-            if (asset && asset.albumId === albumId) {
-                return asset;
-            }
-            return null;
-        } catch (error) {
-            console.error(`Error fetching asset by ID: ${error}`);
-            return null;
-        }
-    }
-
     async getAllAssets(): Promise<MediaLibrary.Asset[]> {
         let assets: MediaLibrary.Asset[] = [];
         let hasNextPage = true;
