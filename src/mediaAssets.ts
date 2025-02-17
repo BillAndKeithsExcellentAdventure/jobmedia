@@ -146,7 +146,8 @@ export class MediaAssets {
     public async getAllAssetsNearLocation(
         longitude: number,
         latitude: number,
-        distance: number
+        distance: number,
+        statusFunction?: (status: string) => void
     ): Promise<MediaLibrary.Asset[]> {
         let assets: MediaLibrary.Asset[] = [];
         let hasNextPage = true;
@@ -160,6 +161,9 @@ export class MediaAssets {
             });
 
             console.log(`Page ${counter++} with ${result.assets.length} assets`);
+            if (statusFunction) {
+                statusFunction(`Page ${counter} with ${result.assets.length} assets`);
+            }
 
             for (let asset of result.assets) {
                 const location: { latitude: number; longitude: number } | null = await this.getAssetLocation(asset.id);
@@ -172,12 +176,21 @@ export class MediaAssets {
                     if (distanceInMeters <= distance) {
                         console.log(`Asset ${asset.id} is within distance of ${distance} `);
                         assets.push(asset);
+                        if (statusFunction) {
+                            statusFunction(
+                                `Added asset within distance of ${distance}. Total assets found: ${assets.length}`
+                            );
+                        }
                     }
                 }
             }
 
             hasNextPage = result.hasNextPage;
             after = result.endCursor;
+        }
+
+        if (statusFunction) {
+            statusFunction(`Found ${assets.length}`);
         }
 
         return assets;

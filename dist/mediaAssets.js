@@ -2,6 +2,7 @@ import * as MediaLibrary from "expo-media-library";
 import { ImageManipulator } from "expo-image-manipulator";
 import * as FileSystem from "expo-file-system";
 import { Stack } from "./stack";
+// hello keith
 export class MediaAssets {
     _hasNextPage = true;
     _after = undefined;
@@ -105,7 +106,7 @@ export class MediaAssets {
         const distance = R * c; // in meters
         return distance;
     }
-    async getAllAssetsNearLocation(longitude, latitude, distance) {
+    async getAllAssetsNearLocation(longitude, latitude, distance, statusFunction) {
         let assets = [];
         let hasNextPage = true;
         let after = undefined;
@@ -116,6 +117,9 @@ export class MediaAssets {
                 after: after,
             });
             console.log(`Page ${counter++} with ${result.assets.length} assets`);
+            if (statusFunction) {
+                statusFunction(`Page ${counter} with ${result.assets.length} assets`);
+            }
             for (let asset of result.assets) {
                 const location = await this.getAssetLocation(asset.id);
                 if (location) {
@@ -123,11 +127,17 @@ export class MediaAssets {
                     if (distanceInMeters <= distance) {
                         console.log(`Asset ${asset.id} is within distance of ${distance} `);
                         assets.push(asset);
+                        if (statusFunction) {
+                            statusFunction(`Added asset within distance of ${distance}. Total assets found: ${assets.length}`);
+                        }
                     }
                 }
             }
             hasNextPage = result.hasNextPage;
             after = result.endCursor;
+        }
+        if (statusFunction) {
+            statusFunction(`Found ${assets.length}`);
         }
         return assets;
     }
