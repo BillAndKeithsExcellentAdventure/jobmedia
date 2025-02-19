@@ -7,7 +7,7 @@ export declare class MediaAssets {
     constructor();
     setPageSize(pageSize: number): void;
     getFirstAssetPage(pageSize: number): Promise<MediaLibrary.Asset[]>;
-    getNextAssetPage(): Promise<MediaLibrary.Asset[] | null>;
+    getNextAssetPage(): Promise<MediaLibrary.Asset[]>;
     getPreviousAssetPage(): Promise<MediaLibrary.Asset[] | undefined>;
     private getAssetPage;
     getAllAssets(): Promise<MediaLibrary.Asset[]>;

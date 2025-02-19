@@ -71,6 +71,7 @@ export class MediaAssets {
             const result = await MediaLibrary.getAssetsAsync({
                 first: pageSize,
                 after: pageCursor,
+                sortBy: MediaLibrary.SortBy.creationTime,
             });
             return result;
         }
@@ -85,8 +86,8 @@ export class MediaAssets {
         let after = undefined;
         while (hasNextPage) {
             const result = await MediaLibrary.getAssetsAsync({
-                first: 100, // Adjust the number as needed
                 after: after,
+                sortBy: MediaLibrary.SortBy.creationTime,
             });
             assets = assets.concat(result.assets);
             hasNextPage = result.hasNextPage;

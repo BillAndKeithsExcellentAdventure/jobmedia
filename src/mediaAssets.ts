@@ -39,7 +39,7 @@ export class MediaAssets {
         return result ? result : [];
     }
 
-    public async getNextAssetPage(): Promise<MediaLibrary.Asset[] | null> {
+    public async getNextAssetPage(): Promise<MediaLibrary.Asset[]> {
         this._stack.push(this._after);
 
         console.log("Getting next assets with page size: " + this._pageSize);
@@ -96,6 +96,7 @@ export class MediaAssets {
             const result = await MediaLibrary.getAssetsAsync({
                 first: pageSize,
                 after: pageCursor,
+                sortBy: MediaLibrary.SortBy.creationTime,
             });
 
             return result;
@@ -112,8 +113,8 @@ export class MediaAssets {
 
         while (hasNextPage) {
             const result = await MediaLibrary.getAssetsAsync({
-                first: 100, // Adjust the number as needed
                 after: after,
+                sortBy: MediaLibrary.SortBy.creationTime,
             });
             assets = assets.concat(result.assets);
             hasNextPage = result.hasNextPage;
